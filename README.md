@@ -95,7 +95,12 @@ rethinkdb import -f data.json --table test.user
 ```
 
 ######create index
-create a second index in tables->UI
+
+create a second index in tables->UI , or by command:
+```
+r.db('test').table('users').indexCreate("name")
+```
+
 ```
 r.db('test').table('users').getAll(10,{index:"age"})
 ```
@@ -111,4 +116,39 @@ r.db('test').table('users').indexStatus("nameage");
 retrive data from compound index:
 ```
 r.db('test').table('users').getAll(["k",20],{index:"nameage"})
+```
+######Advenced query
+```
+r.db("test").table("users").skip(1).limit(10)     //similar to mongo
+```
+
+orderBy
+```
+r.db('test').table('users').orderBy('age')
+r.db('test').table('users').orderBy(r.desc('age'))
+```
+
+orderBy using index
+```
+r.db('test').table('users').orderBy({index:r.desc('age')})
+```
+
+return a sample element:
+```
+r.db('test').table('users').sample(1)
+```
+
+group and count  //count the occurance of name
+```
+r.db('test').table('users').group('name').count()
+```
+
+ungroup:  -> If forgot, will cause an error  e: Cannot convert NUMBER to SEQUENCE in:
+```
+r.db('test').table('users').group('name').count().ungroup().orderBy(r.desc('reduction')).limit(3)
+```
+avg,max.pluck
+```
+r.db('test').table('users').avg('age')
+r.db('test').table('users').max('age').pluck('age')
 ```
