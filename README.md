@@ -32,5 +32,22 @@ sudo /etc/init.d/rethinkdb start
 #####2
 ######1
 ```
+r.db('test').table('users').insert({"name":"k",age:20});
 r.db('test').table('users').filter({name:"y"});
-r.db('test').table('users').get("ee37e3b4-af45-4292-a6ef-8ed7167f3670");
+r.db('test').table('users').get("ee37e3b4-af45-4292-a6ef-8ed7167f3670").update({"age":2});
+r.db('test').table('users').get("ee37e3b4-af45-4292-a6ef-8ed7167f3670").update({"newattr":100});
+r.db('test').table('users').insert([{"name":"a",age:20},{"name":"b",age:30}]);
+```
+others:
+```
+r.db("dbname").table("name").filter().delete()
+r.db("dbname").table("name").delete()
+r.dbList()
+r.dbDrop("dbname")
+r.db("dbname").tableDrop("name")
+```
+##### 3 clustering
+######concept
+vertical scalability: scaling up using stronger hardware
+horizontal scalability: scaling out refers to the ability by adding hardware
+
