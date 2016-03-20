@@ -152,3 +152,42 @@ avg,max.pluck
 r.db('test').table('users').avg('age')
 r.db('test').table('users').max('age').pluck('age')
 ```
+
+
+##### cp5
+
+
+
+###### cp6. administration
+######tools:
+backup entire cluster:
+```
+rethinkdb dump -c 10.0.0.1:28015 -f /var/back.tar
+```
+
+backup db and table
+```
+rethinkdb dump -e dbname.tbname -f /var/back.tar
+```
+
+restore:
+```
+rethinkdb restore file.rar
+rethinkdb restore file.tar -c 10.0.0.1:28015 dbname:tbname
+```
+
+secure port: (hidden rethinkdb database)
+```
+r.db('rethinkdb').
+r.db('rethinkdb').table('cluster_config').get('auth').update({auth_key:'pas'})
+```
+if delete password, set auth_key to null
+
+
+
+##### 7 
+######using rethink
+get realtime data changefeeds
+```
+r.db("test").table("users").skip(1).limit(10).changes()
+```
