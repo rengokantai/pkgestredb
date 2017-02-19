@@ -106,11 +106,11 @@ r.dbList()
 r.dbDrop("dbname")
 r.db("dbname").tableDrop("name")
 ```
-##### cp3 clustering
-######concept
+##3. Clustering, Sharding, and Replication
+### An introduction to scaling
 vertical scalability: scaling up using stronger hardware
 horizontal scalability: scaling out refers to the ability by adding hardware
-######build culster
+### Clustering RethinkDB
 two ips: 10.0.0.1:29015  10.0.0.2:29015
 edit 
 ```
