@@ -15,6 +15,7 @@ cat /etc/lsb-release
 then
 ```
 source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
 apt update && apt install -y rethinkdb
 ```
 #### install on centos(using AMI)
@@ -111,12 +112,18 @@ r.db("dbname").tableDrop("name")
 vertical scalability: scaling up using stronger hardware
 horizontal scalability: scaling out refers to the ability by adding hardware
 ### Clustering RethinkDB
+#### Adding a server to the cluster
 two ips: 10.0.0.1:29015  10.0.0.2:29015
 edit 
 ```
 vim /etc/rethinked/instance.d/default.conf
 ```
-
+If you are lazy,use
+```
+```
+vim /etc/rethinked/instance.d/insrance1.conf
+```
+we created before.
 change:
 ```
 bind=all
@@ -126,8 +133,8 @@ server-name=server1  (server2)
 /etc/init.d/rethinkdb restart
 ```
 
-######Replication:
-command in book is incorrect.
+###Replication:
+Read table's data if a table is offline:
 ```
 r.db('test').table('users',{read_mode:'outdated'});
 ```
