@@ -119,7 +119,7 @@ edit
 vim /etc/rethinked/instance.d/default.conf
 ```
 If you are lazy,use
-```
+
 ```
 vim /etc/rethinked/instance.d/insrance1.conf
 ```
@@ -140,7 +140,9 @@ r.db('test').table('users',{read_mode:'outdated'});
 ```
 
 
-#####cp4 performance tuning
+##4. Performance Tuning and Advanced Queries
+### Performance tuning
+#### Increasing the cache size
 edit 
 ```
 vim /etc/rethinked/instance.d/default.conf
@@ -149,19 +151,36 @@ edit
 ```
 cache-size=2048
 ```
-
+#### Increasing concurrency
+It is slow it insert one by one
+```
+r.db('test').table('test').insert({"name": "Alex"})
+r.db('test').table('test').insert({"name": "Louise"})
+r.db('test').table('test').insert({"name": "Matt"})
+```
+insert many at once:(faster)
+```
+r.db('test').table('test').insert([{"name": "Alex"}, {"name": "Louise"}, {"name": "Matt"}])
+```
+####Using soft durability mode
 soft durability(less secure in case of power failure)
 ```
 r.db('test').table('users').insert({"name":"k",age:20},{durability:'soft'});
 ```
 
-######bulk data import
+###bulk data import
 ```
+apt install python-pip
 pip install rethinkdb
 rethinkdb import -f data.json --table test.user
 ```
+### Introducing indexing
+A query that doesn't make use of an index is called a full table scan, which means that the database has to go through the entire table to find the query result
 
-######create index
+### Evaluating query performance
+Data Explorer -> Enable query profiler 
+
+###Creating and using an index
 
 create a second index in tables->UI , or by command:
 ```
@@ -171,7 +190,11 @@ r.db('test').table('users').indexCreate("name")
 ```
 r.db('test').table('users').getAll(10,{index:"age"})
 ```
-
+#### Compound indexes
+filter
+```
+r.db('test').table('people').filter({name: "Alex", age: 22})
+```
 create compound index
 ```
 r.db('test').table('users').indexCreate("nameage",[r.row("name"),r.row("age")])
@@ -184,7 +207,7 @@ retrive data from compound index:
 ```
 r.db('test').table('users').getAll(["k",20],{index:"nameage"})
 ```
-######Advenced query
+### Advenced queries
 ```
 r.db("test").table("users").skip(1).limit(10)     //similar to mongo
 ```
