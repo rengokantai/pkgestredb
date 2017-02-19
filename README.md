@@ -1,13 +1,29 @@
-#### pkgestredb
-#####1
+# pkgsredb
+## 1. Introducing RethinkDB
+### Rethinking the database
+#### Changefeeds
+RethinkDB is designed for building real-time applications. Using a feature called Changefeeds, developers can program the database to continuously push data updates to applications in real time.  
 
-######install on centos(using AMI)
+#### Horizontal scalability
+RethinkDB is a very good solution when flexibility and rapid iteration are of primary importance. Its other big strength is its ability to scale horizontally with very little effort.
+
+### Installing RethinkDB
+#### Installing RethinkDB on Ubuntu/Debian Linux
 ```
-sudo wget http://download.rethinkdb.com/centos/7/`uname -m`/rethinkdb.repo \
-          -O /etc/yum.repos.d/rethinkdb.repo
+cat /etc/lsb-release
+```
+then
+```
+source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+apt update && apt install -y rethinkdb
+```
+#### install on centos(using AMI)
+```
+sudo wget http://download.rethinkdb.com/centos/7/`uname -m`/rethinkdb.repo -O /etc/yum.repos.d/rethinkdb.repo
 sudo yum install rethinkdb
 ```
-
+### Configuring RethinkDB
+#### Running as a daemon
 check status:
 ```
 sudo /etc/init.d/rethinkdb status
