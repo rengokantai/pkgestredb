@@ -24,13 +24,17 @@ sudo yum install rethinkdb
 ```
 ### Configuring RethinkDB
 #### Running as a daemon
-check status:
+check status:(this seems not working)
 ```
 sudo /etc/init.d/rethinkdb status
 ```
+instead use this:
 ```
-sudo cp /etc/rethinkdb/default.conf.sample /etc/rethinkdb/instances.d/instance1.conf
-sudo nano /etc/rethinkdb/instances.d/instance1.conf
+service rethinkdb status
+```
+```
+cp /etc/rethinkdb/default.conf.sample /etc/rethinkdb/instances.d/instance1.conf
+vim /etc/rethinkdb/instances.d/instance1.conf
 ```
 
 
@@ -44,9 +48,33 @@ start:
 ```
 sudo /etc/init.d/rethinkdb start
 ```
+u16
+```
+service rethinkdb restart
+```
+### Running a query
+```
+r.db('test').tableCreate('people')
+```
 
-##### cp2 ReQL
-######1
+## 2. The ReQL Query Language
+### Documents
+#### JSON document format
+##### Embedded documents
+```
+r.db("test").table("users")("address")("postcode")
+```
+### Introducing ReQL
+orderBy
+```
+r.table('users').filter({ name: 'Alex' }).orderBy(r.desc('age'))
+```
+### Inserting data
+
+#### Batch inserts
+```
+r.db('test').table('people').insert([{document1}, {document2}])
+```
 ```
 r.db('test').table('users').insert({"name":"k",age:20});
 r.db('test').table('users').filter({name:"y"});
@@ -54,11 +82,27 @@ r.db('test').table('users').get("ee37e3b4-af45-4292-a6ef-8ed7167f3670").update({
 r.db('test').table('users').get("ee37e3b4-af45-4292-a6ef-8ed7167f3670").update({"newattr":100});
 r.db('test').table('users').insert([{"name":"a",age:20},{"name":"b",age:30}]);
 ```
-others:
+### Reading data
+#### Filtering results
+```
+r.table('people').filter(r.row("address")("city").eq("London"))
+```
+#### Manipulating results
+```
+r.table('people').filter(r.row("yearOfBirth").ge(1990)).pluck("email","phone")
+```
+
+
+
+### Deleting data
+#### Removing all documents
 ```
 r.db("dbname").table("name").filter().delete()
 r.db("dbname").table("name").delete()
 r.dbList()
+```
+#### Deleting a database
+```
 r.dbDrop("dbname")
 r.db("dbname").tableDrop("name")
 ```
