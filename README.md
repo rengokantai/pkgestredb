@@ -208,6 +208,7 @@ retrive data from compound index:
 r.db('test').table('users').getAll(["k",20],{index:"nameage"})
 ```
 ### Advenced queries
+#### Limits, skips, and sorts
 ```
 r.db("test").table("users").skip(1).limit(10)     //similar to mongo
 ```
@@ -222,12 +223,12 @@ orderBy using index
 ```
 r.db('test').table('users').orderBy({index:r.desc('age')})
 ```
-
+#### Finding a random document
 return a sample element:
 ```
 r.db('test').table('users').sample(1)
 ```
-
+#### Grouping
 group and count  //count the occurance of name
 ```
 r.db('test').table('users').group('name').count()
@@ -237,6 +238,8 @@ ungroup:  -> If forgot, will cause an error  e: Cannot convert NUMBER to SEQUENC
 ```
 r.db('test').table('users').group('name').count().ungroup().orderBy(r.desc('reduction')).limit(3)
 ```
+
+#### Aggregations
 avg,max.pluck
 ```
 r.db('test').table('users').avg('age')
@@ -244,32 +247,53 @@ r.db('test').table('users').max('age').pluck('age')
 ```
 
 
-##### cp5
+## 5(see pj)
 
 
 
-###### cp6. administration
-######tools:
-backup entire cluster:
+##6. RethinkDB Administration and Deployment
+### RethinkDB administration tools
+######default command
+```
+rethinkdb dump
+```
+By default, running the command without any arguments will connect to the database node on localhost—port 28015—and this will save the backup as a TAR archive named rethinkdb_dump followed by the date and time.
+######backup entire cluster:
 ```
 rethinkdb dump -c 10.0.0.1:28015 -f /var/back.tar
 ```
-
+#### Backing up a single table
 backup db and table
 ```
 rethinkdb dump -e dbname.tbname -f /var/back.tar
 ```
 
-restore:
+#### Setting up automatic backups
+(rethinkdb-dump = rethinkdb dump)  
 ```
-rethinkdb restore file.rar
-rethinkdb restore file.tar -c 10.0.0.1:28015 dbname:tbname
+/usr/bin/rethinkdb dump -f /home/Ubuntu/backup.tar
 ```
 
-secure port: (hidden rethinkdb database)
+### Restoring your data
 ```
-r.db('rethinkdb').
-r.db('rethinkdb').table('cluster_config').get('auth').update({auth_key:'pas'})
+rethinkdb restore file.rar
+rethinkdb restore file.tar -c 10.0.0.1:28015 -i dbname:tbname
+```
+### Securing RethinkDB
+#### secure port: (hidden rethinkdb database)
+block 8080 except localhost
+```
+iptables -A INPUT -i eth0 -p tcp --dport 8080 -j DROP
+iptables -I INPUT -i eth0 -s 127.0.0.1 -p tcp --dport 8080 -j ACCEPT
+```
+
+#### Securing the driver port
+```
+r.db('rethinkdb').table('users').get('admin').update({password: 'pass'})
+```
+DO NOT USE THIS. Deprecated.
+```
+r.db('rethinkdb').table('cluster_config').get('auth').update({auth_key:'pass'})
 ```
 if delete password, set auth_key to null
 
