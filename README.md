@@ -247,7 +247,7 @@ r.db('test').table('users').max('age').pluck('age')
 ```
 
 
-## 5(see pj)
+##5. Programming RethinkDB in Node.js
 
 
 
@@ -295,8 +295,15 @@ DO NOT USE THIS. Deprecated.
 ```
 r.db('rethinkdb').table('cluster_config').get('auth').update({auth_key:'pass'})
 ```
-if delete password, set auth_key to null
+if delete password, set password to null
+### Monitoring RethinkDB
+```
+r.db("rethinkdb").table("current_issues").run(conn, callback);
+```
 
+```
+r.db("rethinkdb").table("jobs").run(conn, callback);
+```
 
 
 ##### 7 
